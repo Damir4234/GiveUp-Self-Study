@@ -1,11 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from materials.models import Answer
+from materials.models import NULLABLE, Answer
 
 
 class User(AbstractUser):
-    pass
+    username = None
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=128, verbose_name='пароль')
+    is_active = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
 
 
 class CompletedTasks(models.Model):
