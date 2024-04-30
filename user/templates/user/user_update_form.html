@@ -1,0 +1,20 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <form method="POST" action="{% url '/user/update/' pk=user.pk %}">
+        {% csrf_token %}
+        <label for="first_name">Имя:</label><br>
+        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br>
+        <label for="last_name">Фамилия:</label><br>
+        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br>
+        <input type="submit" value="Обновить">
+    </form>
+</body>
+</html>
