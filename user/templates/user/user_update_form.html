@@ -8,7 +8,7 @@
     <title>Login</title>
 </head>
 <body>
-    <form method="POST" action="{% url '/user/update/' pk=user.pk %}">
+    <form method="POST" action="{% url 'user:update' pk=user.pk %}">
         {% csrf_token %}
         <label for="first_name">Имя:</label><br>
         <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br>

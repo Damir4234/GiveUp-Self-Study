@@ -106,5 +106,6 @@ class UserUpdateView(UpdateView):
     model = User
     fields = ['first_name', 'last_name']
     template_name = 'user/user_update_form.html'
-    success_url = reverse_lazy('user:update', kwargs={
-                               'pk': self.object.pk})  # not working
+
+    def get_success_url(self):
+        return reverse_lazy('user:profile', kwargs={'pk': self.object.pk})

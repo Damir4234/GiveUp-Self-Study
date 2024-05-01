@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,47 +30,27 @@
             box-sizing: border-box;
         }
 
-        input[type="submit"],
-        button {
+        input[type="submit"] {
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-bottom: 10px;
         }
 
-        input[type="submit"]:hover,
-        button:hover {
+        input[type="submit"]:hover {
             background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h2>Профиль пользователя</h2>
-  <table>
-    <tr>
-      <th>Email:</th>
-      <td>{{ user.email }}</td>
-    </tr>
-    <tr>
-      <th>Имя:</th>
-      <td>{{ user.first_name }}</td>
-    </tr>
-    <tr>
-      <th>Фамилия:</th>
-      <td>{{ user.last_name }}</td>
-    </tr>
-    <tr>
-      <th>Пароль:</th>
-      <td>{{ user.password }}</td>
-    </tr>
-    <tr>
-      <th>Активен:</th>
-      <td>{{ user.is_active }}</td>
-    </tr>
-  </table>
-  <button onclick="window.location.href='/user/update/{{ user.pk }}/'">Изменить</button>
+    <!-- course_form.html -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать курс</button>
+  </form>
+  
 </body>
 </html>
