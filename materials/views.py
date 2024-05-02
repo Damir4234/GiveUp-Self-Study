@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
-from user.models import User
+from user.models import CompletedTasks, User
 from materials.models import Answer, Course, Lesson
 
 
@@ -54,3 +54,30 @@ class LessonCreateView(CreateView):
                 Answer.objects.create(
                     lesson=form.instance, question=question, correct_answer=answer)
         return redirect(self.get_success_url('user:profile', kwargs={'pk': self.object.pk}))
+
+
+class LessonDetailView(DetailView):
+    model = Lesson
+    template_name = 'materials/lesson_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        lesson = self.get_object()
+        context['questions'] = Answer.objects.filter(lesson=lesson)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        lesson = self.get_object()
+        user = request.user
+        for question in lesson.answer_set.all():
+            answer_text = request.POST.get(str(question.id))
+            is_correct = self.check_answer_correctness(
+                question.id, answer_text)
+            CompletedTasks.objects.create(
+                user=user, answer=question, is_correct=is_correct)
+        return redirect('materials:lesson_detail', pk=lesson.pk)
+
+    def check_answer_correctness(self, question_id, answer_text):
+        question = Answer.objects.get(pk=question_id)
+        correct_answer = question.correct_answer
+        return answer_text.strip().lower() == correct_answer.strip().lower()
