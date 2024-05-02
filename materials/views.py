@@ -6,6 +6,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from user.models import CompletedTasks, User
 from materials.models import Answer, Course, Lesson
+from django.contrib import messages
 
 
 class IndexView(TemplateView):
@@ -63,7 +64,9 @@ class LessonDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         lesson = self.get_object()
+        user = self.request.user
         context['questions'] = Answer.objects.filter(lesson=lesson)
+        context['completed_tasks'] = CompletedTasks.objects.filter(user=user)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -71,10 +74,20 @@ class LessonDetailView(DetailView):
         user = request.user
         for question in lesson.answer_set.all():
             answer_text = request.POST.get(str(question.id))
-            is_correct = self.check_answer_correctness(
-                question.id, answer_text)
-            CompletedTasks.objects.create(
-                user=user, answer=question, is_correct=is_correct)
+            completed_task = CompletedTasks.objects.filter(
+                user=user, answer=question).first()
+            if completed_task and completed_task.is_correct:
+                messages.error(request, f"You've already answered question '{
+                               question.question}' correctly.")
+            else:
+                is_correct = self.check_answer_correctness(
+                    question.id, answer_text)
+                if is_correct:
+                    CompletedTasks.objects.create(
+                        user=user, answer=question, is_correct=True)
+                else:
+                    messages.error(request, f"Your answer to question '{
+                                   question.question}' is incorrect.")
         return redirect('materials:lesson_detail', pk=lesson.pk)
 
     def check_answer_correctness(self, question_id, answer_text):

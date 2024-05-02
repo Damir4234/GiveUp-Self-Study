@@ -9,6 +9,10 @@
     <h1>{{ object.title }}</h1>
     <p>{{ object.content }}</p>
 
+    {% for message in messages %}
+        <div>{{ message }}</div>
+    {% endfor %}
+
     <h2>Вопросы к уроку:</h2>
     <form method="post">
         {% csrf_token %}
