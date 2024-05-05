@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from django.views.generic import CreateView, UpdateView, DetailView
+from django.views.generic import CreateView, UpdateView, DetailView, ListView
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from user.models import CompletedTasks, User
@@ -24,6 +24,18 @@ class CourseCreateView(CreateView):
         # Добавляем текущего пользователя как автора курса
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class CourseListView(ListView):
+    model = Course
+    template_name = 'materials/courses_list.html'
+    context_object_name = 'courses'
+
+
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'materials/course_detail.html'  # Имя вашего шаблона HTML
+    context_object_name = 'course'
 
 
 class LessonCreateView(CreateView):
@@ -94,3 +106,9 @@ class LessonDetailView(DetailView):
         question = Answer.objects.get(pk=question_id)
         correct_answer = question.correct_answer
         return answer_text.strip().lower() == correct_answer.strip().lower()
+
+
+class LessonListView(ListView):
+    model = Lesson
+    template_name = 'materials/lesson_list.html'
+    context_object_name = 'lessons'
