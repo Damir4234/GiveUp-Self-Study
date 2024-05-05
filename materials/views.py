@@ -15,10 +15,13 @@ class IndexView(TemplateView):
 
 class CourseCreateView(CreateView):
     model = Course
-    fields = ['title', 'description', 'author']
+    fields = ['title', 'description']
 
     def get_success_url(self):
-        return reverse_lazy('user:profile', kwargs={'pk': self.object.pk})
+        # Получаем ID только что созданного курса
+        course_id = self.object.pk
+        # Возвращаем URL создания урока для этого курса
+        return reverse_lazy('materials:lesson_create', kwargs={'course_id': course_id})
 
     def form_valid(self, form):
         # Добавляем текущего пользователя как автора курса
@@ -43,30 +46,24 @@ class LessonCreateView(CreateView):
     fields = ['title', 'content']
     template_name = 'materials/lesson_form.html'
 
-    def get_success_url(self):
-        return reverse_lazy('user:profile', kwargs={'pk': self.object.pk})
-
     def form_valid(self, form):
-        # Получаем ID курса из URL
         course_id = self.kwargs['course_id']
-        # Сохраняем урок и устанавливаем курс
         form.instance.course_id = course_id
-        # Сохраняем урок
         super().form_valid(form)
-        # Получаем данные из формы
         data = self.request.POST
-        # Итерируемся по данным, чтобы найти вопросы и ответы
         for key, value in data.items():
             if key.startswith('question_'):
-                # Получаем индекс вопроса
                 index = key.split('_')[1]
-                # Получаем текст вопроса и ответа по этому индексу
                 question = value
                 answer = data['answer_' + index]
-                # Создаем объект Answer и сохраняем его в базе данных
                 Answer.objects.create(
                     lesson=form.instance, question=question, correct_answer=answer)
-        return redirect(self.get_success_url('user:profile', kwargs={'pk': self.object.pk}))
+        # После успешного создания урока перенаправляем пользователя на страницу списка уроков для данного курса
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        course_id = self.kwargs['course_id']
+        return reverse_lazy('materials:lesson_list', kwargs={'course_id': course_id})
 
 
 class LessonDetailView(DetailView):
@@ -112,3 +109,21 @@ class LessonListView(ListView):
     model = Lesson
     template_name = 'materials/lesson_list.html'
     context_object_name = 'lessons'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем объект курса из URL-параметра
+        course_id = self.kwargs.get('course_id')
+        course = Course.objects.get(pk=course_id)
+        # Добавляем объект курса в контекст
+        context['course'] = course
+        return context
+
+
+class DashboardView(TemplateView):
+    template_name = 'materials/dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['courses'] = Course.objects.all()
+        return context

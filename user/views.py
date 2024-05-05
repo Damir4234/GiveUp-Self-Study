@@ -81,7 +81,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             # Перенаправление на страницу профиля
-            return redirect('user:profile', pk=user.pk)
+            return redirect('materials:dashboard')
         else:
             # В случае неудачной аутентификации, добавим сообщение об ошибке
             messages.error(
