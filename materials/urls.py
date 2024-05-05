@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CourseDetailView, CourseListView, DashboardView, IndexView, CourseCreateView, LessonCreateView, LessonDetailView, LessonListView
+from .views import CourseDetailView, CourseListView, CourseUpdateView, DashboardView, IndexView, CourseCreateView, LessonCreateView, LessonDetailView, LessonListView
 
 app_name = 'materials'
 
@@ -14,5 +14,7 @@ urlpatterns = [
     path('courses/<int:course_id>/lessons/',
          LessonListView.as_view(), name='lesson_list'),
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('courses/<int:pk>/update/',
+         CourseUpdateView.as_view(), name='course_update'),
     # Другие URL-шаблоны
 ]

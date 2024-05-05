@@ -7,13 +7,18 @@
 </head>
 <body>
     <h1>Dashboard</h1>
-       <!-- Кнопка для создания курса -->
-       <a href="{% url 'materials:course_create' %}" class="btn btn-primary">Создать курс</a>
+    <!-- Кнопка для создания курса -->
+    <a href="{% url 'materials:course_create' %}" class="btn btn-primary">Создать курс</a>
 
     <h2>Мои созданные курсы</h2>
     <ul>
         {% for course in created_courses %}
-            <li><a href="{% url 'materials:course_detail' course.id %}">{{ course.title }}</a></li>
+            <li>
+                <a href="{% url 'materials:course_detail' course.id %}">{{ course.title }}</a>
+                {% if user == course.author %}
+                    <a href="{% url 'materials:course_update' course.id %}" class="btn btn-secondary">Изменить</a>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 

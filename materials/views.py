@@ -8,6 +8,7 @@ from user.models import CompletedTasks, User
 from materials.models import Answer, Course, Lesson
 from django.contrib import messages
 from user.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 
 class IndexView(TemplateView, LoginRequiredMixin):
@@ -155,3 +156,24 @@ class DashboardView(TemplateView, LoginRequiredMixin):
         all_courses = Course.objects.all()
         context['courses'] = all_courses
         return context
+
+
+class CourseUpdateView(UserPassesTestMixin, UpdateView):
+    model = Course
+    fields = ['title', 'description']
+    template_name = 'materials/course_update.html'  # Имя вашего шаблона HTML
+    context_object_name = 'course'
+    success_url = reverse_lazy('materials:dashboard')
+
+    def test_func(self):
+        # Получаем объект курса, который будет изменяться
+        course = self.get_object()
+        # Проверяем, является ли текущий пользователь автором этого курса
+        return self.request.user == course.author
+
+    def handle_no_permission(self):
+        # В этом случае пользователь не является автором курса
+        # Здесь вы можете определить, что происходит, когда пользователь не имеет разрешения на изменение курса
+        # Например, можно отобразить сообщение об ошибке или перенаправить пользователя на другую страницу
+        # В этом примере просто перенаправляем пользователя на домашнюю страницу
+        return redirect('home')
