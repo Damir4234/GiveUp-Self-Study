@@ -7,13 +7,36 @@ from django.urls import reverse_lazy
 from user.models import CompletedTasks, User
 from materials.models import Answer, Course, Lesson
 from django.contrib import messages
+from user.mixins import LoginRequiredMixin
 
 
-class IndexView(TemplateView):
+class IndexView(TemplateView, LoginRequiredMixin):
     template_name = 'materials/index.html'
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # Получаем список курсов, созданных текущим пользователем
+    #     user = self.request.user
+    #     context['created_courses'] = Course.objects.filter(author=user)
+    #     # Получаем список всех курсов
+    #     context['courses'] = Course.objects.all()
+    #     return context
 
-class CourseCreateView(CreateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Получаем список курсов, созданных текущим пользователем
+        user = self.request.user
+        created_courses = Course.objects.filter(author=user)
+        print("Created courses:", created_courses)  # Отладочный вывод
+        # Получаем список всех курсов
+        all_courses = Course.objects.all()
+        print("All courses:", all_courses)  # Отладочный вывод
+        context['created_courses'] = created_courses
+        context['courses'] = all_courses
+        return context
+
+
+class CourseCreateView(CreateView, LoginRequiredMixin):
     model = Course
     fields = ['title', 'description']
 
@@ -29,19 +52,19 @@ class CourseCreateView(CreateView):
         return super().form_valid(form)
 
 
-class CourseListView(ListView):
+class CourseListView(ListView, LoginRequiredMixin):
     model = Course
     template_name = 'materials/courses_list.html'
     context_object_name = 'courses'
 
 
-class CourseDetailView(DetailView):
+class CourseDetailView(DetailView, LoginRequiredMixin):
     model = Course
     template_name = 'materials/course_detail.html'  # Имя вашего шаблона HTML
     context_object_name = 'course'
 
 
-class LessonCreateView(CreateView):
+class LessonCreateView(CreateView, LoginRequiredMixin):
     model = Lesson
     fields = ['title', 'content']
     template_name = 'materials/lesson_form.html'
@@ -66,7 +89,7 @@ class LessonCreateView(CreateView):
         return reverse_lazy('materials:lesson_list', kwargs={'course_id': course_id})
 
 
-class LessonDetailView(DetailView):
+class LessonDetailView(DetailView, LoginRequiredMixin):
     model = Lesson
     template_name = 'materials/lesson_detail.html'
 
@@ -105,7 +128,7 @@ class LessonDetailView(DetailView):
         return answer_text.strip().lower() == correct_answer.strip().lower()
 
 
-class LessonListView(ListView):
+class LessonListView(ListView, LoginRequiredMixin):
     model = Lesson
     template_name = 'materials/lesson_list.html'
     context_object_name = 'lessons'
@@ -120,10 +143,15 @@ class LessonListView(ListView):
         return context
 
 
-class DashboardView(TemplateView):
+class DashboardView(TemplateView, LoginRequiredMixin):
     template_name = 'materials/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['courses'] = Course.objects.all()
+        # Получаем список курсов, созданных текущим пользователем
+        created_courses = Course.objects.filter(author=self.request.user)
+        context['created_courses'] = created_courses
+        # Получаем список всех курсов
+        all_courses = Course.objects.all()
+        context['courses'] = all_courses
         return context
