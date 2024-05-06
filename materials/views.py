@@ -23,18 +23,18 @@ class IndexView(TemplateView, LoginRequiredMixin):
     #     context['courses'] = Course.objects.all()
     #     return context
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-        created_courses = Course.objects.filter(author=user)
-        print("Created courses:", created_courses)
+    #     user = self.request.user
+    #     created_courses = Course.objects.filter(author=user)
+    #     print("Created courses:", created_courses)
 
-        all_courses = Course.objects.all()
-        print("All courses:", all_courses)
-        context['created_courses'] = created_courses
-        context['courses'] = all_courses
-        return context
+    #     all_courses = Course.objects.all()
+    #     print("All courses:", all_courses)
+    #     context['created_courses'] = created_courses
+    #     context['courses'] = all_courses
+    #     return context
 
 
 class CourseCreateView(CreateView, LoginRequiredMixin):
