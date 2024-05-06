@@ -26,3 +26,9 @@ CREATE DATABASE mydatabase;
 ```
 
 3. Основываясь на `.env.sample`, заполните своими данными проект
+
+4. Создайте суперпользователя командой:
+
+```
+python manage.py csu
+```
