@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование курса</title>
+</head>
+<body>
+    <h1>Редактирование курса</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="title">Название курса:</label><br>
+        <input type="text" id="title" name="title" value="{{ course.title }}" required><br><br>
+        
+        <label for="description">Описание курса:</label><br>
+        <textarea id="description" name="description" required>{{ course.description }}</textarea><br><br>
+        
+        <button type="submit">Сохранить изменения</button>
+    </form>
+</body>
+</html>

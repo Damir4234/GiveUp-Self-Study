@@ -1,0 +1,82 @@
+
+
+
+
+  
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_title">Название урока:</label>
+        <input type="text" id="id_title" name="title" required>
+        <br>
+        <label for="id_content">Материал урока:</label>
+        <textarea id="id_content" name="content" required></textarea>
+        <br>
+        <!-- Добавляем вопросы с ответами -->
+        <h2>Вопросы с ответами</h2>
+        <div id="questions">
+          <div class="question">
+            <label for="id_question_0">Вопрос:</label>
+            <textarea id="id_question_0" name="question_0" required></textarea>
+            <br>
+            <label for="id_answer_0">Ответ:</label>
+            <input type="text" id="id_answer_0" name="answer_0" required>
+          </div>
+        </div>
+        <button type="button" id="add_question">Добавить вопрос</button>
+        <br>
+        <button type="submit">Создать урок</button>
+      </form>
+      
+      <script>
+        document.getElementById('add_question').addEventListener('click', function() {
+          var questionsDiv = document.getElementById('questions');
+          var questionCount = questionsDiv.getElementsByClassName('question').length;
+      
+          var newQuestionDiv = document.createElement('div');
+          newQuestionDiv.classList.add('question');
+      
+          var questionLabel = document.createElement('label');
+          questionLabel.htmlFor = 'id_question_' + questionCount;
+          questionLabel.textContent = 'Вопрос:';
+          newQuestionDiv.appendChild(questionLabel);
+      
+          var questionTextarea = document.createElement('textarea');
+          questionTextarea.id = 'id_question_' + questionCount;
+          questionTextarea.name = 'question_' + questionCount;
+          questionTextarea.required = true;
+          newQuestionDiv.appendChild(questionTextarea);
+      
+          var lineBreak = document.createElement('br');
+          newQuestionDiv.appendChild(lineBreak);
+      
+          var answerLabel = document.createElement('label');
+          answerLabel.htmlFor = 'id_answer_' + questionCount;
+          answerLabel.textContent = 'Ответ:';
+          newQuestionDiv.appendChild(answerLabel);
+      
+          var answerInput = document.createElement('input');
+          answerInput.type = 'text';
+          answerInput.id = 'id_answer_' + questionCount;
+          answerInput.name = 'answer_' + questionCount;
+          answerInput.required = true;
+          newQuestionDiv.appendChild(answerInput);
+      
+          questionsDiv.appendChild(newQuestionDiv);
+        });
+      </script>
+  
+</body>
+</html>

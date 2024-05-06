@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список уроков</title>
+</head>
+<body>
+    <h1>Список уроков для курса "{{ course.title }}"</h1>
+    <ul>
+        {% for lesson in lessons %}
+            <li><a href="{% url 'materials:lesson_detail' lesson.pk %}">{{ lesson.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

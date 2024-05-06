@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px 0;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #2ecc71;
+        }
+
+        .btn-secondary:hover {
+            background-color: #27ae60;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        a {
+            color: #3498db;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Панель управления</h1>
+
+    <div style="text-align: center;">
+        <a href="{% url 'user:profile' user.pk %}" class="btn btn-primary">Профиль</a>
+    </div>
+    <!-- Кнопка для создания курса -->
+    <div style="text-align: center;">
+        <a href="{% url 'materials:course_create' %}" class="btn btn-primary">Создать курс</a>
+    </div>
+
+    <h2>Мои созданные курсы</h2>
+    <ul>
+        {% for course in created_courses %}
+            <li>
+                <a href="{% url 'materials:course_detail' course.id %}">{{ course.title }}</a>
+                {% if user == course.author %}
+                    <a href="{% url 'materials:course_update' course.id %}" class="btn btn-secondary">Изменить</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Все курсы</h2>
+    <ul>
+        {% for course in courses %}
+            <li><a href="{% url 'materials:course_detail' course.id %}">{{ course.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
