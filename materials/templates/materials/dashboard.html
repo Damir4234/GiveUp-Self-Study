@@ -77,6 +77,10 @@
 </head>
 <body>
     <h1>Панель управления</h1>
+
+    <div style="text-align: center;">
+        <a href="{% url 'user:profile' user.pk %}" class="btn btn-primary">Профиль</a>
+    </div>
     <!-- Кнопка для создания курса -->
     <div style="text-align: center;">
         <a href="{% url 'materials:course_create' %}" class="btn btn-primary">Создать курс</a>
