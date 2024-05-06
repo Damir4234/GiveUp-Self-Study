@@ -16,5 +16,5 @@ urlpatterns = [
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
     path('courses/<int:pk>/update/',
          CourseUpdateView.as_view(), name='course_update'),
-    # Другие URL-шаблоны
+
 ]

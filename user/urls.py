@@ -10,5 +10,5 @@ urlpatterns = [
     path('profile/<int:pk>/', UserDetailView.as_view(), name='profile'),
     path('update/<int:pk>/', UserUpdateView.as_view(), name='update'),
     path('login/', login_view, name='login')
-    # Другие URL-шаблоны
+
 ]

@@ -29,12 +29,10 @@ class UserCreateView(CreateView):
 
     def form_valid(self, form):
         user = form.save(commit=False)
-        user.is_active = False  # Устанавливаем is_active в False
-        # Хешируем пароль перед сохранением
+        user.is_active = False
         user.set_password(form.cleaned_data['password'])
         user.save()
 
-        # Отправляем электронное письмо с ссылкой для активации учетной записи
         self.send_activation_email(user)
 
         return super().form_valid(form)
@@ -43,11 +41,9 @@ class UserCreateView(CreateView):
         current_site = get_current_site(self.request)
         mail_subject = 'Активация учетной записи'
 
-        # Генерируем токен и кодируем UID для активации учетной записи
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
 
-        # Передаем uid и token в контекст шаблона
         message = render_to_string('user/activation_email.html', {
             'user': user,
             'domain': current_site.domain,
@@ -80,14 +76,14 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            # Перенаправление на страницу профиля
+
             return redirect('materials:dashboard')
         else:
-            # В случае неудачной аутентификации, добавим сообщение об ошибке
+
             messages.error(
                 request, 'Неверный адрес электронной почты или пароль.')
             return render(request, 'user/login.html')
-    # В случае GET запроса или если аутентификация не удалась, показать форму входа
+
     return render(request, 'user/login.html')
 
 
@@ -95,9 +91,9 @@ class UserDetailView(DetailView):
     model = User
 
     def get_object(self):
-        # Получаем объект пользователя или 404 ошибку, если пользователь не найден
+
         user = get_object_or_404(User, pk=self.kwargs['pk'])
-        # Вывод информации о пользователе для отладки
+
         print("User detail:", user)
         return user
 

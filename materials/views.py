@@ -25,13 +25,13 @@ class IndexView(TemplateView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Получаем список курсов, созданных текущим пользователем
+
         user = self.request.user
         created_courses = Course.objects.filter(author=user)
-        print("Created courses:", created_courses)  # Отладочный вывод
-        # Получаем список всех курсов
+        print("Created courses:", created_courses)
+
         all_courses = Course.objects.all()
-        print("All courses:", all_courses)  # Отладочный вывод
+        print("All courses:", all_courses)
         context['created_courses'] = created_courses
         context['courses'] = all_courses
         return context
@@ -42,13 +42,13 @@ class CourseCreateView(CreateView, LoginRequiredMixin):
     fields = ['title', 'description']
 
     def get_success_url(self):
-        # Получаем ID только что созданного курса
+
         course_id = self.object.pk
-        # Возвращаем URL создания урока для этого курса
+
         return reverse_lazy('materials:lesson_create', kwargs={'course_id': course_id})
 
     def form_valid(self, form):
-        # Добавляем текущего пользователя как автора курса
+
         form.instance.author = self.request.user
         return super().form_valid(form)
 
@@ -61,7 +61,7 @@ class CourseListView(ListView, LoginRequiredMixin):
 
 class CourseDetailView(DetailView, LoginRequiredMixin):
     model = Course
-    template_name = 'materials/course_detail.html'  # Имя вашего шаблона HTML
+    template_name = 'materials/course_detail.html'
     context_object_name = 'course'
 
 
@@ -82,7 +82,7 @@ class LessonCreateView(CreateView, LoginRequiredMixin):
                 answer = data['answer_' + index]
                 Answer.objects.create(
                     lesson=form.instance, question=question, correct_answer=answer)
-        # После успешного создания урока перенаправляем пользователя на страницу списка уроков для данного курса
+
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -136,10 +136,10 @@ class LessonListView(ListView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Получаем объект курса из URL-параметра
+
         course_id = self.kwargs.get('course_id')
         course = Course.objects.get(pk=course_id)
-        # Добавляем объект курса в контекст
+
         context['course'] = course
         return context
 
@@ -149,10 +149,10 @@ class DashboardView(TemplateView, LoginRequiredMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Получаем список курсов, созданных текущим пользователем
+
         created_courses = Course.objects.filter(author=self.request.user)
         context['created_courses'] = created_courses
-        # Получаем список всех курсов
+
         all_courses = Course.objects.all()
         context['courses'] = all_courses
         return context
@@ -166,14 +166,11 @@ class CourseUpdateView(UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('materials:dashboard')
 
     def test_func(self):
-        # Получаем объект курса, который будет изменяться
+
         course = self.get_object()
-        # Проверяем, является ли текущий пользователь автором этого курса
+
         return self.request.user == course.author
 
     def handle_no_permission(self):
-        # В этом случае пользователь не является автором курса
-        # Здесь вы можете определить, что происходит, когда пользователь не имеет разрешения на изменение курса
-        # Например, можно отобразить сообщение об ошибке или перенаправить пользователя на другую страницу
-        # В этом примере просто перенаправляем пользователя на домашнюю страницу
+
         return redirect('home')
