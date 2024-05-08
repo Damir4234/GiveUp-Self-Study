@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from materials.models import NULLABLE, Answer
+from materials.models import Answer
 
 
 class User(AbstractUser):

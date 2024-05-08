@@ -21,7 +21,7 @@ class Course(models.Model):
 
 
 class Lesson(models.Model):
-    """Модель урока - теоретический материал, относится к одному конкретному курсу"""
+    """Модель урока"""
     course = models.ForeignKey(
         Course, on_delete=models.CASCADE, verbose_name='Курс')
     title = models.CharField(

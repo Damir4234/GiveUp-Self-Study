@@ -1,6 +1,5 @@
 from django.contrib.auth.mixins import AccessMixin
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
 
 
 class LoginRequiredMixin(AccessMixin):

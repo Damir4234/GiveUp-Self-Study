@@ -5,21 +5,16 @@ from django.views.generic import CreateView, UpdateView, DetailView
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-from django.http import Http404, HttpResponse, HttpResponseRedirect
-from django.views.generic import View
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.http import Http404
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
 from user.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password
 
 
 class UserCreateView(CreateView):

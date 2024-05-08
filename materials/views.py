@@ -2,9 +2,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
-from django.views.generic import CreateView
-from django.urls import reverse_lazy
-from user.models import CompletedTasks, User
+from user.models import CompletedTasks
 from materials.models import Answer, Course, Lesson
 from django.contrib import messages
 from user.mixins import LoginRequiredMixin
