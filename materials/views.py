@@ -159,7 +159,7 @@ class DashboardView(TemplateView, LoginRequiredMixin):
 class CourseUpdateView(UserPassesTestMixin, UpdateView):
     model = Course
     fields = ['title', 'description']
-    template_name = 'materials/course_update.html'  # Имя вашего шаблона HTML
+    template_name = 'materials/course_update.html'
     context_object_name = 'course'
     success_url = reverse_lazy('materials:dashboard')
 
